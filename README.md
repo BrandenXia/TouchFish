@@ -1,2 +1,9 @@
 # TouchFish
-随便写的玩意，中间可能用到了别人的代码（比如化简根号）
+
+Something write just for fun. Part of its code might come from internet.
+
+## Now contain
+
+- fake IQ testing
+- quadratic with one unknown calculator
+- searching elements and related information
