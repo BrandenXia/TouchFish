@@ -112,13 +112,7 @@ chemistry_data = {
     "Mt": ["meitnerium", 109, 268],
     "Ds": ["darmstadtium", 110, 281],
     "Rg": ["roentgenium", 111, 280],
-    "Cn": ["copernicium", 112, 285],
-    "Uut": ["ununtrium", 113, 284],
-    "Uuq": ["ununquadium", 114, 289],
-    "Uup": ["ununpentium", 115, 288],
-    "Uuh": ["ununhexium", 116, 293],
-    "Uus": ["ununseptium", 117, 294],
-    "Uuo": ["ununoctium", 118, 294]
+    "Cn": ["copernicium", 112, 285]
 }
 
 line = input("Enter some symbols of elements\n> ")
