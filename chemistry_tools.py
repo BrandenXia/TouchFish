@@ -115,15 +115,21 @@ chemistry_data = {
     "Cn": ["copernicium", 112, 285]
 }
 
-line = input("Enter some symbols of elements\n> ")
-elements_symbols = compile(r"[A-Z][a-z]{0,2}")
-all_elements = elements_symbols.findall(line)
-for element in all_elements:
-    information = chemistry_data[element]
-    print(
-        f"""
-        Element Name: {information[0]}
-        Atomic Number: {information[1]}
-        Relative Atomic Mass: {information[2]}
-        """
-    )
+
+def element_search():
+    line = input("Enter some symbols of elements\n> ")
+    elements_symbols = compile(r"[A-Z][a-z]{0,2}")
+    all_elements = elements_symbols.findall(line)
+    for element in all_elements:
+        information = chemistry_data[element]
+        print(
+            f"""
+            Element Name: {information[0]}
+            Atomic Number: {information[1]}
+            Relative Atomic Mass: {information[2]}
+            """
+        )
+
+
+while True:
+    element_search()
