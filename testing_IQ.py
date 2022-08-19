@@ -1,14 +1,17 @@
 from tqdm import trange
 from time import sleep
-from random import randint,uniform
+from random import randint, uniform
+
 
 def question_and_react(question):
     input(question + "\n> ")
     print("Processing your answer, please wait a few seconds...")
     for i in trange(randint(80, 100)):
         sleep(uniform(0.01, 0.2))
+
+
 print(
-"""
+    """
 \t************************
 \t**  Calculate you IQ  **
 \t************************

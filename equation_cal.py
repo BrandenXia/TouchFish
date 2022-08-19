@@ -3,7 +3,7 @@ from sympy import sympify
 from numpy import sqrt, gcd
 
 
-class linear_equation_with_one_unknown:
+class LinearEquationWithOneUnknown:
     """
     calculate equation like kx+b=0
     """
@@ -47,7 +47,7 @@ class linear_equation_with_one_unknown:
         return sympify(ret)
 
 
-class quadratic_with_one_unknown:
+class QuadraticWithOneUnknown:
     """
     calculate using formula (-b±√b^2-4ac)/2a
     """
@@ -190,5 +190,5 @@ class quadratic_with_one_unknown:
             return str(round(base_num + delta_num, 3)) + " or " + str(round(base_num - delta_num, 3))
 
 
-myCal = linear_equation_with_one_unknown()
+myCal = LinearEquationWithOneUnknown()
 print(myCal.calculate("x=0"))
