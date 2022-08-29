@@ -1,4 +1,5 @@
 from re import compile
+import streamlit as st
 
 chemistry_data = {
     "H": ["hydrogen", 1, 1.007],
@@ -115,21 +116,39 @@ chemistry_data = {
     "Cn": ["copernicium", 112, 285]
 }
 
-
-def element_search():
-    line = input("Enter some symbols of elements\n> ")
+st.title("Chemistry Tools")
+elements_info_search, relative_mass_cal = st.tabs(["Elements Information Searching", "Relative Mass Calculation"])
+with elements_info_search:
+    line = st.text_input("Enter some symbols of elements")
     elements_symbols = compile(r"[A-Z][a-z]{0,2}")
     all_elements = elements_symbols.findall(line)
     for element in all_elements:
-        information = chemistry_data[element]
-        print(
-            f"""
-            Element Name: {information[0]}
-            Atomic Number: {information[1]}
-            Relative Atomic Mass: {information[2]}
-            """
-        )
-
-
-while True:
-    element_search()
+        try:
+            information = chemistry_data[element]
+            st.text(
+                f"""
+                Element Name: {information[0]}
+                Atomic Number: {information[1]}
+                Relative Atomic Mass: {information[2]}
+                """
+            )
+        except KeyError:
+            st.text(f"Element {element} does not exit!")
+with relative_mass_cal:
+    line = st.text_input("Enter a chemical formula")
+    atomic_group = compile(r"\(([A-Za-z0-9]+)\)")
+    elements_symbols = compile(r"[A-Z][a-z]{0,2}")
+    atomic_group_num = compile(r"\([A-Za-z0-9]+\)(\d+)?")
+    chem_res = atomic_group.findall(line)
+    num_res = atomic_group_num.findall(line)
+    var = []
+    for i in num_res:
+        try:
+            i = int(i)
+        except ValueError:
+            i = 1
+        var.append(i)
+    num_res = var
+    del var
+    full_res = dict(zip(chem_res, num_res))
+    print(full_res)
