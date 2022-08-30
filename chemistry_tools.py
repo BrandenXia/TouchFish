@@ -120,8 +120,11 @@ st.title("Chemistry Tools")
 elements_info_search, relative_mass_cal = st.tabs(["Elements Information Searching", "Relative Mass Calculation"])
 with elements_info_search:
     line = st.text_input("Enter some symbols of elements")
+
     elements_symbols = compile(r"[A-Z][a-z]{0,2}")
+
     all_elements = elements_symbols.findall(line)
+
     for element in all_elements:
         try:
             information = chemistry_data[element]
@@ -136,11 +139,17 @@ with elements_info_search:
             st.text(f"Element {element} does not exit!")
 with relative_mass_cal:
     line = st.text_input("Enter a chemical formula")
+
     atomic_group = compile(r"\(([A-Za-z0-9]+)\)")
-    elements_symbols = compile(r"[A-Z][a-z]{0,2}")
     atomic_group_num = compile(r"\([A-Za-z0-9]+\)(\d+)?")
+    atomic_group_quoted = compile(r"\([A-Za-z0-9]+\)[\d+]?")
+    elements_symbols = compile(r"([A-Z][a-z]{0,2})")
+    elements_symbols_num = compile(r"[A-Z][a-z]{0,2}(\d+)?")
+
     chem_res = atomic_group.findall(line)
     num_res = atomic_group_num.findall(line)
+    quoted_atomic_group = atomic_group_quoted.findall(line)
+
     var = []
     for i in num_res:
         try:
@@ -149,6 +158,47 @@ with relative_mass_cal:
             i = 1
         var.append(i)
     num_res = var
-    del var
+
     full_res = dict(zip(chem_res, num_res))
-    print(full_res)
+
+    excluded_atomic_group = line
+    for i in quoted_atomic_group:
+        excluded_atomic_group = excluded_atomic_group.replace(i, "")
+    print(excluded_atomic_group)
+
+    relative_mass = 0
+
+    for key in full_res:
+        element = elements_symbols.findall(key)
+        element_num = elements_symbols_num.findall(key)
+
+        var = []
+        for i in element_num:
+            try:
+                i = int(i)
+            except ValueError:
+                i = 1
+            var.append(i)
+        element_num = var
+        all_elements = dict(zip(element, element_num))
+
+        for i in all_elements:
+            relative_mass += chemistry_data[i][2] * all_elements[i]
+
+    element = elements_symbols.findall(excluded_atomic_group)
+    element_num = elements_symbols_num.findall(excluded_atomic_group)
+
+    var = []
+    for i in element_num:
+        try:
+            i = int(i)
+        except ValueError:
+            i = 1
+        var.append(i)
+    element_num = var
+    del var
+    all_elements = dict(zip(element, element_num))
+
+    for i in all_elements:
+        relative_mass += chemistry_data[i][2] * all_elements[i]
+    st.text(f"Relative Mass: {relative_mass}")
