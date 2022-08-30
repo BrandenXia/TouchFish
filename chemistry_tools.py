@@ -1,6 +1,7 @@
 from re import compile
 import streamlit as st
 
+# define information about chemical elements
 chemistry_data = {
     "H": ["hydrogen", 1, 1.007],
     "He": ["helium", 2, 4.002],
@@ -116,18 +117,24 @@ chemistry_data = {
     "Cn": ["copernicium", 112, 285]
 }
 
+# initialize website title and tabs
 st.title("Chemistry Tools")
 elements_info_search, relative_mass_cal = st.tabs(["Elements Information Searching", "Relative Mass Calculation"])
+
+# first tab: elements information searching
 with elements_info_search:
+    # get user input
     line = st.text_input("Enter some symbols of elements")
-
+    # define regex for getting a list of elements
     elements_symbols = compile(r"[A-Z][a-z]{0,2}")
-
+    # get the list of elements
     all_elements = elements_symbols.findall(line)
-
+    # process the list of elements
     for element in all_elements:
         try:
+            # get element information
             information = chemistry_data[element]
+            # output element information
             st.text(
                 f"""
                 Element Name: {information[0]}
@@ -136,20 +143,26 @@ with elements_info_search:
                 """
             )
         except KeyError:
+            # output error message
             st.text(f"Element {element} does not exit!")
-with relative_mass_cal:
-    line = st.text_input("Enter a chemical formula")
 
+# second tab: relative mass calculation
+with relative_mass_cal:
+    # get user input
+    line = st.text_input("Enter a chemical formula")
+    # define regex for getting information in chemical formula
     atomic_group = compile(r"\(([A-Za-z0-9]+)\)")
     atomic_group_num = compile(r"\([A-Za-z0-9]+\)(\d+)?")
     atomic_group_quoted = compile(r"\([A-Za-z0-9]+\)[\d+]?")
     elements_symbols = compile(r"([A-Z][a-z]{0,2})")
     elements_symbols_num = compile(r"[A-Z][a-z]{0,2}(\d+)?")
-
+    # get the list of quoted atomic groups
     chem_res = atomic_group.findall(line)
     num_res = atomic_group_num.findall(line)
     quoted_atomic_group = atomic_group_quoted.findall(line)
 
+    # process the list of atomic groups in brackets
+    # if there is no number in the atomic group, set the number to 1
     var = []
     for i in num_res:
         try:
@@ -158,20 +171,20 @@ with relative_mass_cal:
             i = 1
         var.append(i)
     num_res = var
-
+    # pack the list of atomic groups and the list of numbers in brackets into a dictionary
     full_res = dict(zip(chem_res, num_res))
-
+    # process the list of atomic groups not in brackets by deleting everything in brackets
     excluded_atomic_group = line
     for i in quoted_atomic_group:
         excluded_atomic_group = excluded_atomic_group.replace(i, "")
-    print(excluded_atomic_group)
-
+    # start processing the information in dictionaries
     relative_mass = 0
-
+    # process the list of atomic groups in brackets
     for key in full_res:
+        # get element information in the list of atomic groups in brackets
         element = elements_symbols.findall(key)
         element_num = elements_symbols_num.findall(key)
-
+        # if there is no number in the element information, set the number to 1
         var = []
         for i in element_num:
             try:
@@ -180,14 +193,16 @@ with relative_mass_cal:
                 i = 1
             var.append(i)
         element_num = var
+        # pack the list of elements and the list of numbers in brackets into a dictionary
         all_elements = dict(zip(element, element_num))
-
+        # add the relative mass of the atomic group in brackets to the relative mass of the chemical formula
         for i in all_elements:
-            relative_mass += chemistry_data[i][2] * all_elements[i]
+            relative_mass += chemistry_data[i][2] * all_elements[i] * full_res[key]
 
+    # get element information in the list of atomic groups not in brackets
     element = elements_symbols.findall(excluded_atomic_group)
     element_num = elements_symbols_num.findall(excluded_atomic_group)
-
+    # if there is no number in the element information, set the number to 1
     var = []
     for i in element_num:
         try:
@@ -197,8 +212,10 @@ with relative_mass_cal:
         var.append(i)
     element_num = var
     del var
+    # pack the list of elements and the list of numbers not in brackets into a dictionary
     all_elements = dict(zip(element, element_num))
-
+    # add the relative mass of the atomic group not in brackets to the relative mass of the chemical formula
     for i in all_elements:
         relative_mass += chemistry_data[i][2] * all_elements[i]
+    # output the relative mass of the chemical formula
     st.text(f"Relative Mass: {relative_mass}")
