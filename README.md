@@ -7,3 +7,4 @@ Something write just for fun. Part of its code might come from internet.
 - fake IQ testing
 - equation calculator
 - tools related to chemistry
+- quickly calculate square root
